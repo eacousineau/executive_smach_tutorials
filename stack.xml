@@ -8,7 +8,7 @@
   <depend stack="common_msgs" /> <!-- actionlib_msgs -->
   <depend stack="executive_smach" /> <!-- smach_ros, smach -->
   <depend stack="ros" /> <!-- rospy -->
-  <depend stack="ros_pkg_tutorials" /> <!-- turtle_actionlib -->
+  <!--depend stack="ros_pkg_tutorials" /--> <!-- turtle_actionlib -->
   <depend stack="ros_tutorials" /> <!-- turtlesim -->
 
 </stack>
