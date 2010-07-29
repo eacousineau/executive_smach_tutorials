@@ -49,8 +49,10 @@ def main():
     with sm:
         # Add states to the container
         smach.StateMachine.add('FOO', Foo(), 
-                               transitions={'outcome1':'BAR', 'outcome2':'outcome4'},
-                               remapping={'foo_counter_in':'sm_counter', 'foo_counter_out':'sm_counter'})
+                               transitions={'outcome1':'BAR', 
+                                            'outcome2':'outcome4'},
+                               remapping={'foo_counter_in':'sm_counter', 
+                                          'foo_counter_out':'sm_counter'})
         smach.StateMachine.add('BAR', Bar(), 
                                transitions={'outcome1':'FOO'},
                                remapping={'bar_counter_in':'sm_counter'})
