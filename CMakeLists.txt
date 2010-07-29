@@ -14,5 +14,5 @@ include($ENV{ROS_ROOT}/core/rosbuild/rosbuild.cmake)
 # properly.  CMake 2.4 seems to have unpredictable scoping rules for such
 # variables.
 #list(APPEND CPACK_SOURCE_IGNORE_FILES /core/experimental )
- 
+  
 rosbuild_make_distribution(0.1.0) 
