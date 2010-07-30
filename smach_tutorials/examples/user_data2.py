@@ -57,8 +57,6 @@ def main():
                                transitions={'outcome1':'FOO'},
                                remapping={'bar_counter_in':'sm_counter'})
 
-    sis = smach_ros.IntrospectionServer('my_smach_node',sm,'/STATE_MACHINE')
-    sis.start()
 
     # Execute SMACH plan
     outcome = sm.execute()
