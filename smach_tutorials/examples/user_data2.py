@@ -63,9 +63,6 @@ def main():
     # Execute SMACH plan
     outcome = sm.execute()
 
-    rospy.spin()
-
-
 
 if __name__ == '__main__':
     main()
