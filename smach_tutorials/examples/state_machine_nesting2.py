@@ -63,7 +63,8 @@ def main():
 
             # Add states to the container
             smach.StateMachine.add('FOO', Foo(), 
-                                   transitions={'outcome1':'BAR', 'outcome2':'outcome4'})
+                                   transitions={'outcome1':'BAR', 
+                                                'outcome2':'outcome4'})
             smach.StateMachine.add('BAR', Bar(), 
                                    transitions={'outcome1':'FOO'})
 
