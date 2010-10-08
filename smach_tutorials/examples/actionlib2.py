@@ -38,7 +38,7 @@ def main():
     with sm0:
         # Add states to the container
 
-        # Add a simple action sttate. This will use an emtpy, default goal
+        # Add a simple action state. This will use an empty, default goal
         # As seen in TestServer above, an empty goal will always return with
         # GoalStatus.SUCCEEDED, causing this simple action state to return
         # the outcome 'succeeded'
