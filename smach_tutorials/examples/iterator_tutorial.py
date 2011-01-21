@@ -34,8 +34,8 @@ def construct_sm():
                 StateMachine.add('EVEN_OR_ODD',
                                  ConditionState(cond_cb = lambda ud:ud.nums[ud.index]%2, 
                                                 input_keys=['nums', 'index']),
-                                 {'true':'EVEN',
-                                  'false':'ODD' })
+                                 {'true':'ODD',
+                                  'false':'EVEN' })
                 #add even state
                 @smach.cb_interface(input_keys=['nums', 'index', 'even_nums'],
                                     output_keys=['odd_nums'], 
