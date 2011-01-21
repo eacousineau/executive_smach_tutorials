@@ -24,6 +24,7 @@ def construct_sm():
                                it_label = 'index',
                                exhausted_outcome = 'succeeded')
 ## %EndTag(ITERATOR)% 
+## %Tag(CONTAINER)%
         with tutorial_it:
             container_sm = StateMachine(outcomes = ['succeeded','preempted','aborted','continue'],
                                         input_keys = ['nums', 'index', 'even_nums', 'odd_nums'],
@@ -53,15 +54,19 @@ def construct_sm():
                     return 'succeeded'
                 StateMachine.add('ODD', CBState(odd_cb), 
                                  {'succeeded':'continue'})
-
+## %EndTag(CONTAINER)%
+## %Tag(ADDCONTAINER)%
             #close container_sm
             Iterator.set_contained_state('CONTAINER_STATE', 
                                          container_sm, 
                                          loop_outcomes=['continue'])
-        #close the remap_it
+## %EndTag(ADDCONTAINER)%
+## %Tag(ADDITERATOR)%
+        #close the tutorial_it
         StateMachine.add('TUTORIAL_IT',tutorial_it,
                      {'succeeded':'succeeded',
                       'aborted':'aborted'})
+## %EndTag(ADDITERATOR)%
     return sm
 
 def main():
