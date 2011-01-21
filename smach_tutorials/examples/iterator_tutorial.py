@@ -1,8 +1,8 @@
-## %Tag(FULLTEXT)%
 #! /usr/bin/env python
+## %Tag(FULLTEXT)%
 
-import roslib
-roslib.load_manifest('smach')
+
+import roslib; roslib.load_manifest('smach')
 roslib.load_manifest('smach_ros')
 import rospy
 
@@ -12,40 +12,42 @@ from smach_ros import ConditionState, IntrospectionServer
 
 def construct_sm():
     sm = StateMachine(outcomes = ['succeeded','aborted','preempted'])
-    sm.userdata.numbers = range(25, 88, 3)
-    sm.userdata.even_numbers = []
-    sm.userdata.odd_numbers = []
+    sm.userdata.nums = range(25, 88, 3)
+    sm.userdata.even_nums = []
+    sm.userdata.odd_nums = []
     with sm:
         tutorial_it = Iterator(outcomes = ['succeeded','preempted','aborted'],
                                input_keys = ['nums', 'even_nums', 'odd_nums'],
-                               it = lambda: range(0, len(sm.userdata.numbers)),
+                               it = lambda: range(0, len(sm.userdata.nums)),
                                output_keys = ['even_nums', 'odd_nums'],
                                it_label = 'index',
                                exhausted_outcome = 'succeeded')
         with tutorial_it:
             container_sm = StateMachine(outcomes = ['succeeded','preempted','aborted','continue'],
                                         input_keys = ['nums', 'index', 'even_nums', 'odd_nums'],
-                                        output_keys = ['even_numbers', 'odd_numbers'])
+                                        output_keys = ['even_nums', 'odd_nums'])
             with container_sm:
+                #test wether even or odd
                 StateMachine.add('EVEN_OR_ODD',
-                                 ConditionState(cond_cb = lambda ud:ud.numbers[ud.index]%2, 
+                                 ConditionState(cond_cb = lambda ud:ud.nums[ud.index]%2, 
                                                 input_keys=['nums', 'index']),
                                  {'true':'EVEN',
                                   'false':'ODD' })
+                #add even state
                 @smach.cb_interface(input_keys=['nums', 'index', 'even_nums'],
                                     output_keys=['odd_nums'], 
                                     outcomes=['succeeded'])
                 def even_cb(ud):
-                    ud.even_numbers.append(ud.numbers[ud.index])
+                    ud.even_nums.append(ud.nums[ud.index])
                     return 'succeeded'
                 StateMachine.add('EVEN', CBState(even_cb), 
                                  {'succeeded':'continue'})
-
+                #add odd state
                 @smach.cb_interface(input_keys=['nums', 'index', 'odd_nums'], 
                                     output_keys=['odd_nums'], 
                                     outcomes=['succeeded'])
                 def odd_cb(ud):
-                    ud.odd_numbers.append(ud.numbers[ud.index])
+                    ud.odd_nums.append(ud.nums[ud.index])
                     return 'succeeded'
                 StateMachine.add('ODD', CBState(odd_cb), 
                                  {'succeeded':'continue'})
