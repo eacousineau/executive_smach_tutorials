@@ -1,3 +1,4 @@
+## %Tag(FULLTEXT)%
 #! /usr/bin/env python
 
 import roslib
@@ -66,3 +67,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+## %EndTag(FULLTEXT)%  
