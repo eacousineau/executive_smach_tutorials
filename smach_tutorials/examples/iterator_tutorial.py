@@ -16,12 +16,14 @@ def construct_sm():
     sm.userdata.even_nums = []
     sm.userdata.odd_nums = []
     with sm:
+## %Tag(ITERATOR)%
         tutorial_it = Iterator(outcomes = ['succeeded','preempted','aborted'],
                                input_keys = ['nums', 'even_nums', 'odd_nums'],
                                it = lambda: range(0, len(sm.userdata.nums)),
                                output_keys = ['even_nums', 'odd_nums'],
                                it_label = 'index',
                                exhausted_outcome = 'succeeded')
+## %EndTag(ITERATOR)% 
         with tutorial_it:
             container_sm = StateMachine(outcomes = ['succeeded','preempted','aborted','continue'],
                                         input_keys = ['nums', 'index', 'even_nums', 'odd_nums'],
