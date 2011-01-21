@@ -20,36 +20,40 @@ def construct_sm():
                                input_keys = ['nums', 'even_nums', 'odd_nums'],
                                it = lambda: range(0, len(sm.userdata.numbers)),
                                output_keys = ['even_nums', 'odd_nums'],
-                               it_label = 'tutorial_index',
+                               it_label = 'index',
                                exhausted_outcome = 'succeeded')
         with tutorial_it:
             container_sm = StateMachine(outcomes = ['succeeded','preempted','aborted','continue'],
-                                        input_keys = ['nums', 'tutorial_index', 'even_nums', 'odd_nums'],
+                                        input_keys = ['nums', 'index', 'even_nums', 'odd_nums'],
                                         output_keys = ['even_numbers', 'odd_numbers'])
             with container_sm:
                 StateMachine.add('EVEN_OR_ODD',
-                                 ConditionState(cond_cb = lambda ud:ud.numbers[ud.tutorial_index]%2, 
-                                                input_keys=['nums', 'tutorial_index']),
+                                 ConditionState(cond_cb = lambda ud:ud.numbers[ud.index]%2, 
+                                                input_keys=['nums', 'index']),
                                  {'true':'EVEN',
                                   'false':'ODD' })
-                @smach.cb_interface(input_keys=['nums', 'tutorial_index', 'even_nums'],
+                @smach.cb_interface(input_keys=['nums', 'index', 'even_nums'],
                                     output_keys=['odd_nums'], 
                                     outcomes=['succeeded'])
                 def even_cb(ud):
-                    ud.even_numbers.append(ud.numbers[ud.tutorial_index])
+                    ud.even_numbers.append(ud.numbers[ud.index])
                     return 'succeeded'
-                StateMachine.add('EVEN', CBState(even_cb), {'succeeded':'continue'})
+                StateMachine.add('EVEN', CBState(even_cb), 
+                                 {'succeeded':'continue'})
 
-                @smach.cb_interface(input_keys=['nums', 'tutorial_index', 'odd_nums'], 
+                @smach.cb_interface(input_keys=['nums', 'index', 'odd_nums'], 
                                     output_keys=['odd_nums'], 
                                     outcomes=['succeeded'])
                 def odd_cb(ud):
-                    ud.odd_numbers.append(ud.numbers[ud.tutorial_index])
+                    ud.odd_numbers.append(ud.numbers[ud.index])
                     return 'succeeded'
-                StateMachine.add('ODD', CBState(odd_cb), {'succeeded':'continue'})
+                StateMachine.add('ODD', CBState(odd_cb), 
+                                 {'succeeded':'continue'})
 
             #close container_sm
-            Iterator.set_contained_state('CONTAINER_STATE', container_sm, loop_outcomes=['continue'])
+            Iterator.set_contained_state('CONTAINER_STATE', 
+                                         container_sm, 
+                                         loop_outcomes=['continue'])
         #close the remap_it
         StateMachine.add('TUTORIAL_IT',tutorial_it,
                      {'succeeded':'succeeded',
