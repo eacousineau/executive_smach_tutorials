@@ -1,14 +1,30 @@
 #!/usr/bin/env python
+"""
+Description:
+    Spawn an actionlib action server, then create a state machine that sends
+    some goals to the action server that will automatically succeed or abort.
+    We expect the first goal to succeed, and the second goal to abort, so
+    when the second goal aborts, we map that onto success of the state
+    machine.
+
+Usage:
+    $> ./actionlib.py
+
+Output:
+    [INFO] : State machine starting in initial state 'GOAL_DEFAULT' with userdata: 
+        []
+    [WARN] : Still waiting for action server 'test_action' to start... is it running?
+    [INFO] : State machine transitioning 'GOAL_DEFAULT':'succeeded'-->'GOAL_STATIC'
+    [INFO] : State machine terminating 'GOAL_STATIC':'aborted':'succeeded'
+"""
 
 import roslib; roslib.load_manifest('smach_tutorials')
 import rospy
 import smach
 import smach_ros
 
-from smach_tutorials.msg import TestAction, TestGoal
 from actionlib import *
-from actionlib.msg import *
-
+from actionlib_msgs.msg import *
 
 # Create a trivial action server
 class TestServer:
@@ -38,44 +54,29 @@ def main():
     with sm0:
         # Add states to the container
 
-        # Add a simple action state. This will use an empty, default goal
+        # Add a simple action sttate. This will use an emtpy, default goal
         # As seen in TestServer above, an empty goal will always return with
         # GoalStatus.SUCCEEDED, causing this simple action state to return
         # the outcome 'succeeded'
         smach.StateMachine.add('GOAL_DEFAULT',
-                               smach_ros.SimpleActionState('test_action', TestAction),
-                               {'succeeded':'GOAL_STATIC'})
+                smach_ros.SimpleActionState('test_action', TestAction),
+                {'succeeded':'GOAL_STATIC'})
 
         # Add another simple action state. This will give a goal
         # that should abort the action state when it is received, so we
         # map 'aborted' for this state onto 'succeeded' for the state machine.
         smach.StateMachine.add('GOAL_STATIC',
-                               smach_ros.SimpleActionState('test_action', TestAction,
-                                                       goal = TestGoal(goal=1)),
-                               {'aborted':'GOAL_CB'})
-
-        
-        # Add another simple action state. This will give a goal
-        # that should abort the action state when it is received, so we
-        # map 'aborted' for this state onto 'succeeded' for the state machine.
-        def goal_callback(userdata, default_goal):
-            goal = TestGoal()
-            goal.goal = 2
-            return goal
-
-        smach.StateMachine.add('GOAL_CB',
-                               smach_ros.SimpleActionState('test_action', TestAction,
-                                                       goal_cb = goal_callback),
-                               {'aborted':'succeeded'})
+                smach_ros.SimpleActionState('test_action', TestAction,
+                    goal = TestGoal(goal=1)),
+                {'aborted':'succeeded'})
 
         # For more examples on how to set goals and process results, see 
-        # executive_smach/smach_ros/tests/smach_actionlib.py
+        # executive_python/smach/tests/smach_actionlib.py
 
     # Execute SMACH plan
     outcome = sm0.execute()
 
     rospy.signal_shutdown('All done.')
-
 
 if __name__ == '__main__':
     main()
